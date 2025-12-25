@@ -20,12 +20,17 @@ const pool = mysql.createPool({
 app.post("/sync/from-sheet", async (req, res) => {
   const r = req.body;
 
+  const updated_at = new Date(r.updated_at)
+    .toISOString()
+    .slice(0,19)
+    .replace("T", " ");
+
   const [rows] = await pool.query(
     "SELECT updated_at FROM records WHERE id = ?",
     [r.id]
   );
 
-  if(rows.length && new Date(rows[0].updated_at) > new Date(r.updated_at)) {
+  if(rows.length && new Date(rows[0].updated_at) > new Date(updated_at)) {
     return res.json({ignored: true});
   }
 
@@ -38,7 +43,7 @@ app.post("/sync/from-sheet", async (req, res) => {
       updated_at = VALUES(updated_at),
       updated_by = 'sheet',
       is_deleted = VALUES(is_deleted)`,
-    [r.id,r.name,r.value,r.updated_at,r.is_deleted]
+    [r.id,r.name,r.value,updated_at,r.is_deleted]
   );
 
   res.json({ ok: true});
