@@ -7,19 +7,20 @@ app.use(express.json());
 
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
+  port: Number(process.env.DB_PORT),
   user: process.env.DB_USER,
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
   ssl: {
-    ca: process.env.DB_CA_CERT
+    ca: process.env.DB_CA_CERT,
+    rejectUnauthorized: false
   }
 });
 
 app.post("/sync/from-sheet", async (req, res) => {
   const r = req.body;
 
-  const [row] = await pool.query(
+  const [rows] = await pool.query(
     "SELECT updated_at FROM records WHERE id = ?",
     [r.id]
   );
