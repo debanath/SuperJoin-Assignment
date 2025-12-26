@@ -60,5 +60,84 @@ app.get("/sync/from-mysql", async ( req, res) => {
   res.json(rows);
 });
 
+app.get("/records", async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      "SELECT id, name, value, updated_at, updated_by, is_deleted FROM records ORDER BY id"
+    );
+
+    let html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <title>MySQL Records</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+          }
+          table {
+            border-collapse: collapse;
+            width: 100%;
+          }
+          th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+          }
+          th {
+            background: #f4f4f4;
+          }
+          tr.deleted {
+            background: #f8d7da;
+            color: #555;
+          }
+        </style>
+      </head>
+      <body>
+        <h2>MySQL Records</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Value</th>
+              <th>Updated At</th>
+              <th>Updated By</th>
+              <th>Deleted</th>
+            </tr>
+          </thead>
+          <tbody>
+    `;
+
+    rows.forEach(r => {
+      html += `
+        <tr class="${r.is_deleted ? "deleted" : ""}">
+          <td>${r.id}</td>
+          <td>${r.name}</td>
+          <td>${r.value}</td>
+          <td>${r.updated_at}</td>
+          <td>${r.updated_by}</td>
+          <td>${r.is_deleted}</td>
+        </tr>
+      `;
+    });
+
+    html += `
+          </tbody>
+        </table>
+      </body>
+      </html>
+    `;
+
+    res.send(html);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Failed to load records");
+  }
+});
+
+
 const PORT = Number(process.env.PORT) || 3000;
 app.listen(PORT, () => console.log("Server running on",PORT));
