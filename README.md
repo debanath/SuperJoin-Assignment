@@ -34,7 +34,7 @@ For this task, I chose a free online MySQL server provided by [aiven](https://ai
 
 - **📊 [Google Sheet - Edit & Test](https://docs.google.com/spreadsheets/d/1Pxj9eFa6i56gwh2k3U8m8zkV3cbk0QR4H3-8PHjOayY/edit?usp=sharing)** - Make changes here to see them sync to MySQL
 - **🌐 [Live Database View](https://superjoin-assignment.onrender.com/records)** - View the current state of MySQL records
-- **🎥 [Demo Video]()** - Watch the solution explanation and walkthrough
+- **🎥 [Demo Video](https://youtu.be/hDiaxWu8_w8)** - Watch the solution explanation and walkthrough
 
 ---
 
